@@ -43,17 +43,7 @@ func main() {
 	}
 	g.UseDB(gormdb)
 
-	// Get all table names from the database
-	var tables []string
-	err = gormdb.Raw("SHOW TABLES").Scan(&tables).Error
-	if err != nil {
-		panic("failed to get table names")
-	}
-
-	// Generate models for all tables in the database
-	for _, table := range tables {
-		g.ApplyBasic(g.GenerateModel(table))
-	}
+	g.ApplyBasic(g.GenerateAllTable()...)
 
 	// Old code for generating specific tables (commented out)
 	// Generate model for the "table"

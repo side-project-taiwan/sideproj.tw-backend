@@ -16,34 +16,39 @@ import (
 )
 
 var (
-	Q     = new(Query)
-	Event *event
+	Q       = new(Query)
+	Event   *event
+	Project *project
 )
 
 func SetDefault(db *gorm.DB, opts ...gen.DOOption) {
 	*Q = *Use(db, opts...)
 	Event = &Q.Event
+	Project = &Q.Project
 }
 
 func Use(db *gorm.DB, opts ...gen.DOOption) *Query {
 	return &Query{
-		db:    db,
-		Event: newEvent(db, opts...),
+		db:      db,
+		Event:   newEvent(db, opts...),
+		Project: newProject(db, opts...),
 	}
 }
 
 type Query struct {
 	db *gorm.DB
 
-	Event event
+	Event   event
+	Project project
 }
 
 func (q *Query) Available() bool { return q.db != nil }
 
 func (q *Query) clone(db *gorm.DB) *Query {
 	return &Query{
-		db:    db,
-		Event: q.Event.clone(db),
+		db:      db,
+		Event:   q.Event.clone(db),
+		Project: q.Project.clone(db),
 	}
 }
 
@@ -57,18 +62,21 @@ func (q *Query) WriteDB() *Query {
 
 func (q *Query) ReplaceDB(db *gorm.DB) *Query {
 	return &Query{
-		db:    db,
-		Event: q.Event.replaceDB(db),
+		db:      db,
+		Event:   q.Event.replaceDB(db),
+		Project: q.Project.replaceDB(db),
 	}
 }
 
 type queryCtx struct {
-	Event IEventDo
+	Event   IEventDo
+	Project IProjectDo
 }
 
 func (q *Query) WithContext(ctx context.Context) *queryCtx {
 	return &queryCtx{
-		Event: q.Event.WithContext(ctx),
+		Event:   q.Event.WithContext(ctx),
+		Project: q.Project.WithContext(ctx),
 	}
 }
 
