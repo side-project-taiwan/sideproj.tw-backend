@@ -2,24 +2,16 @@ package main
 
 import (
 	"fmt"
-	"log"
-	"os"
-
-	"spt/internal/utility"
-
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"
+	"log"
+	"os"
+	"spt/internal/utility"
 )
 
 func main() {
-
-	g := gen.NewGenerator(gen.Config{
-		OutPath: "./models",
-		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
-	})
-
 	rootDir, envPath, err := utility.GetProjectRootDirAndEnvPath()
 	if err != nil {
 		fmt.Println("Error:", err)
@@ -27,6 +19,11 @@ func main() {
 	}
 	fmt.Println("Project root directory:", rootDir)
 	fmt.Println("Environment file path:", envPath)
+
+	g := gen.NewGenerator(gen.Config{
+		OutPath: fmt.Sprintf("%s/internal/gorm_gen/models", rootDir),
+		Mode:    gen.WithoutContext | gen.WithDefaultQuery | gen.WithQueryInterface,
+	})
 
 	err = godotenv.Load(envPath)
 	if err != nil {
@@ -45,7 +42,7 @@ func main() {
 	}
 	g.UseDB(gormdb)
 
-	g.ApplyBasic(g.GenerateModel("event")) //你自己想產的表
+	g.ApplyBasic(g.GenerateModel("project")) //你自己想產的表
 
 	g.Execute()
 }

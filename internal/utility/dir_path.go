@@ -7,16 +7,22 @@ import (
 )
 
 func GetProjectRootDirAndEnvPath() (string, string, error) {
-	executablePath, err := os.Executable() // Get the full path of the executable file
+	dir, err := os.Getwd() // Get the current working directory
 	if err != nil {
 		return "", "", err
 	}
 
-	dir := filepath.Dir(executablePath) // Get the directory where the executable is located
 	for {
-		if _, err := os.Stat(filepath.Join(dir, "go.mod")); !os.IsNotExist(err) {
-			envPath := filepath.Join(dir, ".env") // Combine the project root with ".env"
-			return dir, envPath, nil              // Return the project root directory and the .env path
+		files, err := os.ReadDir(dir)
+		if err != nil {
+			return "", "", err
+		}
+
+		for _, file := range files {
+			if file.Name() == "go.mod" {
+				envPath := fmt.Sprintf("%s/.env", dir) // Combine the project root with ".env"
+				return dir, envPath, nil               // Return the project root directory and the .env path
+			}
 		}
 
 		parentDir := filepath.Dir(dir)
