@@ -2,13 +2,14 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"os"
+	"spt/internal/utility"
+
 	"github.com/joho/godotenv"
 	"gorm.io/driver/mysql"
 	"gorm.io/gen"
 	"gorm.io/gorm"
-	"log"
-	"os"
-	"spt/internal/utility"
 )
 
 func main() {
@@ -42,7 +43,21 @@ func main() {
 	}
 	g.UseDB(gormdb)
 
-	g.ApplyBasic(g.GenerateModel("project")) //你自己想產的表
+	// Get all table names from the database
+	var tables []string
+	err = gormdb.Raw("SHOW TABLES").Scan(&tables).Error
+	if err != nil {
+		panic("failed to get table names")
+	}
 
+	// Generate models for all tables in the database
+	for _, table := range tables {
+		g.ApplyBasic(g.GenerateModel(table))
+	}
+
+	// Old code for generating specific tables (commented out)
+	// Generate model for the "table"
+	// g.ApplyBasic(g.GenerateModel("project"))
+	// g.ApplyBasic(g.GenerateModel("event"))
 	g.Execute()
 }
