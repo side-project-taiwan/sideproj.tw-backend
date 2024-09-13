@@ -18,7 +18,7 @@ import (
 // Service represents a service that interacts with a database.
 type Service interface {
 	Health() map[string]string
-	GetDB() *gorm.DB
+	GetDB(ctx context.Context) *gorm.DB
 	//Close() error
 }
 
@@ -131,8 +131,8 @@ func (s *service) Health() map[string]string {
 
 	return stats
 }
-func (s *service) GetDB() *gorm.DB {
-	return s.db
+func (s *service) GetDB(ctx context.Context) *gorm.DB {
+	return s.db.WithContext(ctx)
 }
 
 // Close closes the database connection.

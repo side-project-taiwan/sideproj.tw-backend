@@ -2,14 +2,15 @@ package repository
 
 import (
 	"context"
-	"errors"
 	"spt/internal/db"
 	"spt/internal/gorm_gen/model"
+	"spt/internal/gorm_gen/models"
 )
 
 type ProjectRepository interface {
-	FindAll() error
+	CreateProject(ctx context.Context, project *model.Project) error
 	GetProjectList(ctx context.Context) ([]*model.Project, error)
+	GetProjectByID(ctx context.Context, id string) (*model.Project, error)
 }
 
 type projectRepository struct {
@@ -22,23 +23,26 @@ func NewProjectRepository(dbService db.Service) ProjectRepository {
 	}
 }
 
-func (p *projectRepository) GetProjectList(ctx context.Context) ([]*model.Project, error) {
-	var projectsFromDB []*model.Project
-	tx := p.dbService.GetDB().Find(&projectsFromDB)
-	if tx.Error != nil {
-		return nil, tx.Error
-	}
-
-	var projects []*model.Project
-	for _, project := range projectsFromDB {
-		projects = append(projects, &model.Project{
-			ID:          project.ID,
-			ProjectName: project.ProjectName,
-		})
-	}
-	return projects, nil
+func (p *projectRepository) CreateProject(ctx context.Context, project *model.Project) error {
+	q := models.Use(p.dbService.GetDB(ctx))
+	err := q.Project.Create(project)
+	return err
 }
 
-func (p *projectRepository) FindAll() error {
-	return errors.New("not implemented")
+func (p *projectRepository) GetProjectList(ctx context.Context) ([]*model.Project, error) {
+	q := models.Use(p.dbService.GetDB(ctx))
+	result, err := q.Project.ReadDB().Find()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
+}
+
+func (p *projectRepository) GetProjectByID(ctx context.Context, id string) (*model.Project, error) {
+	q := models.Use(p.dbService.GetDB(ctx))
+	result, err := q.Project.ReadDB().Where(q.Project.ID.Eq(id)).First()
+	if err != nil {
+		return nil, err
+	}
+	return result, nil
 }

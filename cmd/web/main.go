@@ -2,18 +2,17 @@ package main
 
 import (
 	"fmt"
+	"github.com/gin-gonic/gin"
+	"github.com/joho/godotenv"
+	log "github.com/sirupsen/logrus"
+	swaggerFiles "github.com/swaggo/files"
+	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
 	"os"
 	"spt/docs"
 	"spt/internal/db"
 	"spt/internal/router"
 	"spt/internal/utility"
-
-	"github.com/gin-gonic/gin"
-	"github.com/joho/godotenv"
-	log "github.com/sirupsen/logrus"
-	swaggerFiles "github.com/swaggo/files"
-	ginSwagger "github.com/swaggo/gin-swagger"
 )
 
 // @host     127.0.0.1:{{.Port}}

@@ -4,12 +4,15 @@ go 1.22
 
 require (
 	github.com/gin-contrib/cors v1.7.2
+	github.com/gin-contrib/timeout v1.0.1
+	github.com/google/uuid v1.6.0
 	github.com/joho/godotenv v1.5.1
 	github.com/sirupsen/logrus v1.9.3
 	github.com/swaggo/files v1.0.1
 	github.com/swaggo/gin-swagger v1.6.0
 	github.com/swaggo/swag v1.16.3
 	gorm.io/gen v0.3.26
+	gorm.io/plugin/dbresolver v1.5.0
 )
 
 require (
@@ -39,7 +42,7 @@ require (
 	github.com/mailru/easyjson v0.7.6 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
-	github.com/pelletier/go-toml/v2 v2.2.1 // indirect
+	github.com/pelletier/go-toml/v2 v2.2.2 // indirect
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.7.0 // indirect
@@ -53,7 +56,6 @@ require (
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	gorm.io/datatypes v1.1.1-0.20230130040222-c43177d3cf8c // indirect
 	gorm.io/hints v1.1.0 // indirect
-	gorm.io/plugin/dbresolver v1.5.0 // indirect
 )
 
 require (

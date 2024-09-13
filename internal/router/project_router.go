@@ -16,6 +16,7 @@ func RegisterProjectRoutes(r *gin.RouterGroup) {
 	projectUsecase := usecase.NewProjectUsecase(projectService)
 	projectHandlers := handler.NewProjectHandler(projectUsecase)
 
+	r.POST("/project", projectHandlers.CreateProject)
 	r.GET("/projects", projectHandlers.GetProjectList)
-
+	r.GET("/project/:id", projectHandlers.GetProjectByID)
 }

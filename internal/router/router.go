@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
 	"os"
+	"spt/internal/middleware"
 	"time"
 )
 
@@ -14,6 +15,7 @@ func InitRouter() *gin.Engine {
 	gin.SetMode(os.Getenv("RUN_MODE"))
 	gin.ForceConsoleColor()
 	r := gin.New()
+	r.Use(middleware.TimeoutMiddleware())
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 	r.Use(cors.New(cors.Config{
